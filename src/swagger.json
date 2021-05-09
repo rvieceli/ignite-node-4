@@ -1,0 +1,366 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Challenge API",
+    "version": "1.0.0",
+    "description": "Challenge 02 - Documentation with swagger",
+    "contact": {
+      "email": "docs@api.com",
+      "url": "http://www.api.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "User",
+      "description": "User management"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["User"],
+        "description": "Create a user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "john@email.com"
+                  }
+                },
+                "required": ["name", "email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "8720b795-fb41-430b-a7e3-9f88d7a18acf"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "john@email.com"
+                    },
+                    "admin": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2021-05-09T17:51:15.788Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2021-05-09T17:51:15.788Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "alreadyExists": {
+                    "summary": "User already exists",
+                    "value": {
+                      "error": "User already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["User"],
+        "description": "List all user if you are an admin",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "user_id",
+            "required": true,
+            "example": "8720b795-fb41-430b-a7e3-9f88d7a18acf"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "8720b795-fb41-430b-a7e3-9f88d7a18acf"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                      },
+                      "email": {
+                        "type": "string",
+                        "example": "john@email.com"
+                      },
+                      "admin": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "example": "2021-05-09T17:51:15.788Z"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "example": "2021-05-09T17:51:15.788Z"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": "8720b795-fb41-430b-a7e3-9f88d7a18acf",
+                    "name": "John Doe",
+                    "email": "john@email.com",
+                    "admin": false,
+                    "created_at": "2021-05-09T17:51:15.788Z",
+                    "updated_at": "2021-05-09T17:51:15.788Z"
+                  },
+                  {
+                    "id": "b0152dcc-dc1f-4f8d-8d95-b9e8de3b2f25",
+                    "admin": false,
+                    "name": "Jane Doe",
+                    "email": "jane@email.com",
+                    "created_at": "2021-05-09T18:01:55.030Z",
+                    "updated_at": "2021-05-09T18:01:55.030Z"
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Exceptions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "notFound": {
+                    "summary": "User does not exists",
+                    "value": {
+                      "error": "User does not exists"
+                    }
+                  },
+                  "notAdmin": {
+                    "summary": "User is not an admin",
+                    "value": {
+                      "error": "User is not an admin"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "tags": ["User"],
+        "description": "Get profile user",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            },
+            "example": "8720b795-fb41-430b-a7e3-9f88d7a18acf"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "8720b795-fb41-430b-a7e3-9f88d7a18acf"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "john@email.com"
+                    },
+                    "admin": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2021-05-09T17:51:15.788Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2021-05-09T17:51:15.788Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "notFound": {
+                    "summary": "User does not exists",
+                    "value": {
+                      "error": "User does not exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/admin": {
+      "patch": {
+        "tags": ["User"],
+        "description": "Set user as admin",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            },
+            "example": "8720b795-fb41-430b-a7e3-9f88d7a18acf"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "8720b795-fb41-430b-a7e3-9f88d7a18acf"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "john@email.com"
+                    },
+                    "admin": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2021-05-09T17:51:15.788Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2021-05-09T17:51:15.788Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "notFound": {
+                    "summary": "User does not exists",
+                    "value": {
+                      "error": "User does not exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
